@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function login() {
+    var university_id = document.getElementById("university_id").value;
+    var password = document.getElementById("password").value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "login.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            if (xhr.responseText.trim() === "success") { // التحقق من "success"
+                window.location.href = 'dashboard.html'; // الانتقال للداشبورد عند النجاح
+            } else {
+                document.getElementById("response").innerHTML = xhr.responseText;
+            }
+        }
+    };
+    xhr.send("university_id=" + university_id + "&password=" + password);
+    return false; // منع إعادة تحميل الصفحة
+}
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>تسجيل الدخول</h2>
+        <form onsubmit="return login();">
+            <input type="text" id="university_id" name="university_id" placeholder="University ID" pattern="\d{5,20}" required title="رقم الجامعة يجب أن يكون بين 5 إلى 20 رقم">
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <button type="submit">تسجيل الدخول</button>
+        </form>
+        <div id="response" style="color: red; margin-top: 10px;"></div> <!-- عرض رسائل الخطأ أو النجاح -->
+        <p>لا تملك حساب؟ <a href="register.html">إنشاء حساب جديد</a></p>
+        <p>نسيت كلمة المرور؟ <a href="reset_password.html">استعادة كلمة المرور</a></p>
+    </div>
+</body>
+</html>

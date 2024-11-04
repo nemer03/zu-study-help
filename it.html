@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة التخصص الجامعي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+            margin: 0;
+            background-color: #00065f;
+            color: #333;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .button {
+            background-color: white;
+            color: #007bff;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .button:hover {
+            background-color: #e7e7e7;
+            color: #0056b3;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            font-family: 'Cairo', sans-serif;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+        }
+        .section h2 {
+            margin-bottom: 15px;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 14px;
+        }
+        .image-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .image-container div {
+            flex: 1 1 150px; /* مساحة للصورة */
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2); /* ظل خفيف */
+            text-align: center; /* مركز العناوين */
+        }
+        .image-container img {
+            width: 180px; /* حجم الصورة */
+            height: 150px; /* حجم الصورة */
+            transition: transform 0.5s;
+            border-radius: 8px; /* زوايا دائرية */
+            cursor: pointer; /* شكل يد عند المرور */
+        }
+        .image-container img:hover {
+            transform: scale(1.2); /* تكبير الصورة عند المرور */
+            opacity: 0.5; /* تعتيم الصورة */
+        }
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* تعتيم أسود */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: 'Cairo', sans-serif; /* الخط العربي كايرو */
+            font-size: 20px;
+            opacity: 0; /* جعل الطبقة غير مرئية بشكل افتراضي */
+            transition: opacity 0.3s; /* انتقال سلس */
+        }
+
+        .image-container div:hover .image-overlay {
+            opacity: 1; /* جعل الطبقة مرئية عند التمرير */
+        }
+
+        .image-container div::after {
+            content: 'اضغط للتكبير'; /* نص عند المرور */
+            font-family: 'Cairo', sans-serif;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgb(255, 0, 0);
+            font-size: 13px;
+            font-weight: bold;
+            opacity: 0; /* بدءاً غير مرئي */
+            transition: opacity 0.3s;
+        }
+        .image-container div:hover::after {
+            opacity: 1; /* إظهار النص عند المرور */
+        }
+        .image-caption {
+            padding: 10px 0; /* فاصل بين الصورة والاسم */
+            font-family: 'Cairo', sans-serif;
+        }
+        .file-list, .video-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .file-list li, .video-list li {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .file-list li:hover, .video-list li:hover {
+            background: #e2e2e2;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            padding-top: 60px;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFade 0.4s;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            cursor: pointer;
+        }
+        @keyframes modalFade {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .buttons {
+                margin-top: 10px;
+            }
+            .section {
+                margin: 10px;
+                padding: 15px;
+            }
+        }
+        .download-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+        .resources-section {
+    padding: 20px;
+    background-color: #f9f9f9; /* لون خلفية خفيف */
+    border-radius: 8px;
+    margin: 20px;
+    font-family: 'Cairo', sans-serif;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+.file-structure {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd; /* حد خفيف حول كل ملف */
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #fff; /* خلفية بيضاء لكل ملف */
+}
+
+.file-icon {
+    font-size: 24px; /* حجم الأيقونة */
+    margin-right: 10px;
+}
+
+.file-name {
+    flex-grow: 1; /* لتوسيع الاسم لملء المساحة المتاحة */
+}
+
+.video-container {
+    width: 300px; /* حدد العرض حسب الحاجة */
+    height: auto; /* اجعل الارتفاع تلقائيًا */
+    margin: 20px auto; /* مركز الحاوية */
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 169px; /* أو أي ارتفاع مناسب */
+}
+.center-text {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            margin: 0 20px; /* مسافة على الجوانب */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="buttons">
+            <button class="button" title="الصفحة الرئيسية" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i></button>
+            <button class="button" title="تسجيل الخروج" onclick="window.location.href='login.html'"><i class="fas fa-power-off"></i></button>
+            <button class="button" title="معلومات الحساب" onclick="showModal()"><i class="fas fa-user"></i></button>
+        </div>
+        <div class="center-text">IT</div>
+        <div class="logo">ZU STUDY <i class="fas fa-university"></i> HELP</div> <!-- أيقونة الجامعة بين الكلمتين -->
+    </div>
+
+    <div class="section">
+        <h2>الخطط الدراسية للتخصصات:</h2>
+        <div class="image-container">
+            <div>
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiOOLiNjBHVxxykwGseji7hSz0YAbp295QgR3CbsFyPtBcIgReaa7tdMw0aoVgn_4KfXGNz_CrFB5XHdVNTJ6R1_dQhOJ6FigzsqRKS0KZvBufbhxXZl_2RdBm0NNk2mqf_xGFjKcj1YZC0aNYI7Lj6Ucwi-bVzQeT_MIcOWmAD-D3Y6WGjSE8tWmUJQ-0" alt="الخطة 1" onclick="openImage(this.src, this)">
+                <p class="image-caption">خطة هندسة البرمجيات 10</p>
+            </div>
+            <div>
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiRgXBfvNd_874ptdOYEqDc5UOycLTnn0z-_RxXwiLQ0Ba9t1IlmQFGl0aJQ3hTOx-wP9WCFMBaREXT1lfRq8vB8vH987wyRtnvE34ufiV4anyoxiw6tOI_G4yJF3xxCONbRUDxiCS1pk3hHnQypHIBhbjgIiYdHCJey6bn4udrVO8u60nOfoplNSREByU" alt="الخطة 2" onclick="openImage(this.src, this)">
+                <p class="image-caption">خطة علم الحاسوب 10</p>
+            </div>
+            <div>
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEh3IzY_OV-7Sl0cm_8uKf1S0jBfcL72T5WdmHbTFU43cUitBw-nuFva6G17LFK7atCEPzJ2IP_bQLLxS_g-xiTiXQ6pnSlteIClkmqkl0S9uppvxrzgBmpLNmpYCQEuJ7hUnq_6XPkS6RS82pB4fM7f2XTDJk-8t4MV6HRSCiTEtSoegvRxQh6FStw_5Fw" alt="الخطة 1" onclick="openImage(this.src, this)">
+                <p class="image-caption">خطة الامن السيبراني 10</p>
+            </div>
+            <div>
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjsic2ghVlw75BwzbiUZM3OiO7ckWZ5BSzJMxYsl2tf4Z7-dKwAED7t2Bp9EPVoScDZ66coFKBJE1qM6x_1J4anjTIlb3W7-nehyUbUiyJy8Iqc_tVu1nsRC-jSv5d5XMQ7f2OZvIoOXt_wboFpeh-VRgv94EUyBbRFIG0B3w9th3ZfeDm_Lrb6cU0gflY" alt="الخطة 1" onclick="openImage(this.src, this)">
+                <p class="image-caption">خطة الذكاء الاصطناعي 10</p>
+            </div>
+            <div>
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhgpfbbw6Tk8v5UCyf4MPBips4YPCwu1gkGFmL3J4hb47r5CDS4iXGbblphdpHwMg2lzNaMZVSxzOi60OaI0eKjLdyk7iMzPRjS5vj0h06Ix7cOsYanSkwdE3qQ_l5yC5y1QbI3VrB8EbmhcxuvEuXn1ZZTJXakPC_P09C450qsdnXiXJV6RWu5EyzOZIY" alt="الخطة 2" onclick="openImage(this.src, this)">
+                <p class="image-caption">خطة هندسة البرمجيات 11</p>
+            </div>
+            <div>
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgMqWT5Bi8AInhjMcF3utxEzo5AVkY0dpZx9Be8u7XEcBfFUN6ze9sl3bWmBlPr8X7EZcobcd5_VTouF3k8NfjmtVS7ZZ9ZUexphOUtmAailgEyJddOxBCmE1bQOG7jMIMxaSPbcnR2lav7xclqZOer1aX-6eijr5It-4C6LRf8eJT8QcH_xIDASZKMOfg" alt="الخطة 1" onclick="openImage(this.src, this)">
+                <p class="image-caption">خطة علم الحاسوب 11</p>
+            </div>
+            <div>
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEh2Yw0cSvfKuZ6q8A304g9EGuM6pm721RqKmZKRyVPIsabJ9sUztLcm7oBAaxeb9cEwdzQOjf_hWJtCR7WTwDrsJJf5cN2dzQ-2IeGuQLmZbHw1JN1Y0BMHRXxDpR7Nf4YRxfjAL81jYgkrgyxyNXBoornHO5_vGfDH-YWg20tIvAnH1kFVC0maHhIQaGI" alt="الخطة 1" onclick="openImage(this.src, this)">
+                <p class="image-caption">خطة الامن السيبراني 11</p>
+            </div>
+            <div>
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjb-01kqJSucCwBir99X6XCtoXj43mQytH6EELS7OA2NryCrbwQutLyBWaNu8_T1fEPxLB_odHz2ZXaTvDet4y9_8a0jD__-Sh16Qyv6UNMRLPsjkw-QBkauH3J9YRj2gbGer6StjUSH1o_-RlXu-u92DlzsYXtmhP5EaKvqR_RW4zynr-dhE96UNz98d8" alt="الخطة 1" onclick="openImage(this.src, this)">
+                <p class="image-caption">خطة الذكاء الاصطناعي 11</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="resources-section">
+        <h2>ملفات مواد التخصص</h2>
+        <div class="file-structure">
+            <div class="file-item">
+                <div class="file-icon">📄</div>
+                <div class="file-name">برمجة الانماط</div>
+                <a href="https://drive.google.com/drive/u/0/folders/1TjcVMOwdWihpvTRsvznxSci2eSgzztWW?fbclid=IwAR2LqYk35MXFHv3HtwRDIIEz_dKW5Dg_8VVIxFHEOI8Z9772Ojguhl5LkOo" class="download-button">تحميل</a>
+            </div>
+            <div class="file-item">
+                <div class="file-icon">📄</div>
+                <div class="file-name">ملف 2.ppt</div>
+                <a href="path/to/file2.ppt" class="download-button">تحميل</a>
+            </div>
+            <div class="file-item">
+                <div class="file-icon">📄</div>
+                <div class="file-name">ملف 3.pdf</div>
+                <a href="path/to/file3.pdf" class="download-button">تحميل</a>
+            </div>
+            <!-- أضف المزيد من الملفات حسب الحاجة -->
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>المواد المسجلة : (قريبا)</h2>
+        <ul id="videoList">
+            <li><a href="#" onclick="showVideo('video1')">فيديو 1</a></li>
+            <li><a href="#" onclick="showVideo('video2')">فيديو 2</a></li>
+            <li><a href="#" onclick="showVideo('video3')">فيديو 3</a></li>
+        </ul>
+    
+        <div class="video-container" id="videoContainer">
+            <!-- الفيديو سيظهر هنا -->
+        </div>
+        
+    </div>
+
+    <script>
+        function showModal() {
+            document.getElementById('userModal').style.display = 'block';
+            loadUserData();
+        }
+        function loadUserData() {
+            fetch('getUserData.php?university_id=20222844')
+                .then(response => response.json())
+                .then(userData => {
+                    document.getElementById("university_id").value = userData.university_id;
+                    document.getElementById("college").value = userData.college;
+                    document.getElementById("major").value = userData.major;
+                    document.getElementById("email").value = userData.email;
+                    document.getElementById("phone").value = userData.phone;
+                    toggleEdit(false);
+                })
+                .catch(console.error);
+        }
+        function toggleEdit(isEditable) {
+            ["university_id", "college", "major", "email", "phone"].forEach(id => {
+                document.getElementById(id).readOnly = !isEditable;
+            });
+            document.getElementById("editButton").style.display = isEditable ? 'none' : 'block';
+            document.getElementById("saveButton").style.display = isEditable ? 'block' : 'none';
+        }
+        function saveUserData() {
+            const userData = {
+                university_id: document.getElementById("university_id").value,
+                college: document.getElementById("college").value,
+                major: document.getElementById("major").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+            };
+            fetch('saveUserData.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                toggleEdit(false);
+            })
+            .catch(console.error);
+        }
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('userModal')) {
+                document.getElementById('userModal').style.display = 'none';
+            }
+        }
+        function closeModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+        function openImage(src, element) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close" onclick="this.parentElement.parentElement.remove();">&times;</span>
+                    <img src="${src}" alt="صورة" style="width:100%;">
+                    <button class="download-button" onclick="downloadImage('${src}')">تنزيل الصورة</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.style.display = 'flex'; // عرض النافذة كمرن
+        }
+        function downloadImage(src) {
+            const a = document.createElement('a');
+            a.href = src;
+            a.download = 'downloaded_image.jpg'; // يمكن تغيير الاسم حسب الحاجة
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function showVideo(videoId) {
+    let videoSrc;
+
+    // تحديد مصدر الفيديو حسب الفيديو المختار
+    switch(videoId) {
+        case 'video1':
+            videoSrc = 'https://youtu.be/cOcd9UN6w7U?si=gat7hMcxpfuGFRR0'; // ضع رابط الفيديو 1 هنا
+            break;
+        case 'video2':
+            videoSrc = 'https://youtu.be/cOcd9UN6w7U?si=gat7hMcxpfuGFRR0'; // ضع رابط الفيديو 2 هنا
+            break;
+        case 'video3':
+            videoSrc = 'https://youtu.be/cOcd9UN6w7U?si=gat7hMcxpfuGFRR0'; // ضع رابط الفيديو 3 هنا
+            break;
+        default:
+            videoSrc = '';
+    }
+
+    // تحديث iframe بالمصدر الجديد
+    document.getElementById('videoContainer').innerHTML = `<iframe src="${videoSrc}" frameborder="0" allowfullscreen></iframe>`;
+}
+
+    </script>
+
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="document.getElementById('userModal').style.display='none'">&times;</span>
+        <h2>معلومات الحساب</h2>
+        <label>الرقم الجامعي:</label><input type="text" id="university_id" readonly><br>
+        <label>الكلية:</label><input type="text" id="college" readonly><br>
+        <label>التخصص:</label><input type="text" id="major" readonly><br>
+        <label>البريد الإلكتروني:</label><input type="text" id="email" readonly><br>
+        <label>رقم الهاتف:</label><input type="text" id="phone" readonly><br>
+        <button id="editButton" class="button" onclick="toggleEdit(true)">تعديل</button>
+        <button id="saveButton" class="button" style="display:none" onclick="saveUserData()">حفظ</button>
+    </div>
+</div>
+
+    <div class="footer">
+        Created By: Nemer Adel | 20222844 &copy; 2024
+    </div>
+</body>
+</html>

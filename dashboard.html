@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* تصميم الرأس */
+        :root {
+            /* Colors */
+            --brand-color: hsl(215, 98%, 51%);
+            --black: hsl(0, 0%, 0%);
+            --white: hsl(0, 0%, 100%);
+            /* Fonts */
+            --font-title: "Montserrat", sans-serif;
+            --font-text: "Lato", sans-serif;
+        }
+
+        /* RESET */
+        /* Box sizing rules */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        /* Remove default margin */
+        body,
+        h2,
+        p {
+            margin: 0;
+        }
+
+        /* GLOBAL STYLES */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh; /* استخدام min-height لضمان أن الجسم يملأ كامل الصفحة */
+      
+            background-image:url("https://imbm.co.za/wp-content/uploads/2012/11/blue-and-white-background-blue-white-background-1920x10801.jpg");
+            color: #000000;
+            text-align: center;
+            padding-top: 80px; /* إضافة padding أعلى الصفحة لترك مساحة للرأس */
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            font-family: var(--font-title);
+            color: var(--white);
+            line-height: 1.1;
+        }
+
+        p {
+            font-family: var(--font-text);
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--white);
+        }
+
+        .flow > * + * {
+            margin-top: var(--flow-space, 1em);
+        }
+
+        /* CARD COMPONENT */
+        .card {
+            display: grid;
+            place-items: center;
+            width: 60vw;
+            max-width: 15rem;
+            height: 18rem;
+            overflow: hidden;
+            border-radius: 0.625rem;
+            box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+            margin: 1rem; /* إضافة مسافة بين البطاقات */
+            
+        }
+
+        .card > * {
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+        }
+
+        .card__background {
+            object-fit: cover;
+            max-width: 100%;
+            height: 100%;
+        }
+
+        .card__content {
+            --flow-space: 0.9375rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-self: flex-end;
+            height: 55%;
+            padding: 5% 1.25rem 2.5rem;
+            background: linear-gradient(
+                180deg,
+                hsla(0, 0%, 0%, 0) 0%,
+                hsla(0, 0%, 0%, 0.3) 10%,
+                hsl(0, 0%, 0%) 100%
+            );
+        }
+
+        .card__content--container {
+            --flow-space: 1.25rem;
+        }
+
+        .card__title {
+            position: relative;
+            width: fit-content;
+            width: -moz-fit-content; /* خاصية لـ Firefox */
+            font-size: 1.5rem; /* تقليل حجم الخط هنا إذا كان النص لا يزال لا يظهر */
+ 
+    text-overflow: ellipsis; /* سيضيف نقاط (...) إذا كان النص أكبر من العرض */
+        }
+
+        .card__title::after {
+            content: "";
+            position: absolute;
+            height: 0.3125rem;
+            width: calc(100% + 1.25rem);
+            bottom: calc((1.25rem - 0.5rem) * -1);
+            left: -1.25rem;
+            background-color: var(--brand-color);
+        }
+
+        .card__button {
+            padding: 0.525em 1.12em;
+            width: fit-content;
+            width: -moz-fit-content; /* خاصية لـ Firefox */
+            font-variant: small-caps;
+            font-weight: bold;
+            border-radius: 0.45em;
+            border: none;
+            background-color: var(--brand-color);
+            font-family: var(--font-title);
+            font-size: 0.7875rem;
+            color: var(--black);
+            margin-top: 1rem;
+        }
+
+        .card__button:focus {
+            outline: 2px solid black;
+            outline-offset: -5px;
+        }
+
+        @media (any-hover: hover) and (any-pointer: fine) {
+            .card__content {
+                transform: translateY(62%);
+                transition: transform 500ms ease-out;
+                transition-delay: 500ms;
+            }
+
+            .card__title::after {
+                opacity: 0;
+                transform: scaleX(0);
+                transition: opacity 1000ms ease-in, transform 500ms ease-out;
+                transition-delay: 500ms;
+                transform-origin: right;
+            }
+
+            .card__background {
+                transition: transform 500ms ease-in;
+            }
+
+            .card__content--container > :not(.card__title),
+            .card__button {
+                opacity: 0;
+                transition: transform 500ms ease-out, opacity 500ms ease-out;
+            }
+
+            .card:hover,
+            .card:focus-within {
+                transform: scale(1.05);
+                transition: transform 500ms ease-in;
+            }
+
+            .card:hover .card__content,
+            .card:focus-within .card__content {
+                transform: translateY(0);
+                transition: transform 500ms ease-in;
+            }
+
+            .card:focus-within .card__content {
+                transition-duration: 0ms;
+            }
+
+            .card:hover .card__background,
+            .card:focus-within .card__background {
+                transform: scale(1.3);
+            }
+
+            .card:hover .card__content--container > :not(.card__title),
+            .card:hover .card__button,
+            .card:focus-within .card__content--container > :not(.card__title),
+            .card:focus-within .card__button {
+                opacity: 1;
+                transition: opacity 500ms ease-in;
+                transition-delay: 1000ms;
+            }
+
+            .card:hover .card__title::after,
+            .card:focus-within .card__title::after {
+                opacity: 1;
+                transform: scaleX(1);
+                transform-origin: left;
+                transition: opacity 500ms ease-in, transform 500ms ease-in;
+                transition-delay: 500ms;
+            }
+        }
+
+        .footer {
+            margin-top: auto; /* استخدام margin-top: auto لوضع التذييل في الأسفل */
+            font-size: 14px;
+            font-family: "Montserrat", sans-serif;
+            color: var(--white);
+            width: 100%; /* إضافة عرض للتذييل */
+            padding: 10px 0; /* إضافة padding للتذييل */
+        }
+
+        .playwrite-gb-s-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: "Playwrite GB S", cursive;
+            color: var(--black);
+        }
+
+        .icon {
+            background-color: aliceblue;
+            border-radius: 50%;
+            font-size: 27px;
+            margin: 0 5px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* تعديل لتوسيع توزيع البطاقات */
+            gap: 1rem; /* إضافة مسافة بين البطاقات */
+            padding: 2rem 0; /* إضافة padding للحاوية */
+            width: 100%; /* تعيين عرض الحاوية */
+            flex: 1; /* يسمح للحاوية بتوسيع المساحة المتبقية */
+        }
+
+        .buttons {
+            position: absolute;
+            top: 20px; /* ارتفاع الأزرار */
+            right: 20px; /* المسافة من اليمين */
+        }
+
+        .buttons i {
+            margin: 0 10px; /* مسافة بين الأزرار */
+            cursor: pointer; /* تغيير شكل المؤشر عند المرور على الأزرار */
+            font-size: 24px; /* حجم الأيقونات */
+            color: var(--white);
+        }
+        .button {
+            background-color: white;
+            color: #007bff;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .button:hover {
+            background-color: #e7e7e7;
+            color: #0056b3;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            padding-top: 60px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* أسلوب المحتوى داخل النافذة */
+        .modal-content {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFade 0.4s;
+        }
+
+        /* زر إغلاق النافذة */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- رأس الصفحة يحتوي على الشعار -->
+    <div class="playwrite-gb-s-logo">ZU STUDY<br><span class="icon">&#127891;</span> HELP</div>
+
+    <div class="buttons">
+        <i class="fas fa-home" title="الصفحة الرئيسية" onclick="window.location.href='dashboard.html'"></i>
+        <i class="fas fa-power-off" title="تسجيل الخروج" onclick="logout()"></i>
+        <i class="fas fa-user" title="معلومات الحساب" onclick="showModal()"></i>
+
+    </div>
+    <!-- المحتوى الرئيسي يحتوي على مربعات للتخصصات الجامعية -->
+    <div class="card-container">
+        <!-- البطاقة الأولى -->
+        <article class="card">
+            <img
+                class="card__background"
+                src="https://leads.edu.pk/wp-content/uploads/2024/02/it-img.jpg"
+                alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
+                width="1920"
+                height="2193"
+            />
+            <div class="card__content flow">
+                <div class="card__content--container flow">
+                    <h2 class="card__title">تكنولوجيا المعلومات</h2>
+                    <p class="card__description">
+                          مواد كلية تكنولوجيا المعلومات لجميع تخصصاتها
+                    </p>
+                </div>
+                <a href="it.html" class="card__button">Go !</a>
+            </div>
+        </article>
+
+        <!-- البطاقة الثانية -->
+        <article class="card">
+            <img
+                class="card__background"
+                src="https://www.aljazeera.net/wp-content/uploads/2022/12/8-17.jpg?w=770&resize=770%2C513"
+                alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
+                width="1920"
+                height="2193"
+            />
+            <div class="card__content flow">
+                <div class="card__content--container flow">
+                    <h2 class="card__title"> اللغة العربية</h2>
+                    <p class="card__description">
+                         جميع مواد تخصص اللغة العربية
+                    </p>
+                </div>
+                <button class="card__button">Go !</button>
+            </div>
+        </article>
+
+        <!-- تكرار البطاقة 9 مرات -->
+        <article class="card">
+            <img
+                class="card__background"
+                src="https://www.centreofexcellence.com/media/image/62/72/17da6d6cfcf9b2fc6257143aedf1.jpeg"
+                alt="Photo of Cartagena's cathedral at the background and some colonial style houses"
+                width="1920"
+                height="2193"
+            />
+            <div class="card__content flow">
+                <div class="card__content--container flow">
+                    <h2 class="card__title">اللغة الانجليزية</h2>
+                    <p class="card__description">
+                        جميع  مواد تخصص اللغة الانجليزية  
+                    </p>
+                </div>
+                <button class="card__button">Go !</button>
+            </div>
+        </article>
+
+        <!-- يمكنك تكرار البطاقات الأخرى هنا -->
+        <article class="card">...</article>
+        <article class="card">...</article>
+        <article class="card">...</article>
+        <article class="card">...</article>
+        <article class="card">...</article>
+        <article class="card">...</article>
+        <article class="card">...</article>
+        <article class="card">...</article>
+        <article class="card">...</article>
+    </div>
+    <script>
+        // إظهار النافذة المنبثقة لعرض بيانات المستخدم
+        function showModal() {
+            document.getElementById('userModal').style.display = 'block';
+            loadUserData();
+        }
+    
+        // تحميل بيانات المستخدم وعرضها في الحقول
+        function loadUserData() {
+            fetch('getUserData.php?university_id=20222844')
+                .then(response => response.json())
+                .then(userData => {
+                    document.getElementById("university_id").value = userData.university_id;
+                    document.getElementById("college").value = userData.college;
+                    document.getElementById("major").value = userData.major;
+                    document.getElementById("email").value = userData.email;
+                    document.getElementById("phone").value = userData.phone;
+                    toggleEdit(false); // جعل الحقول غير قابلة للتعديل بعد تحميل البيانات
+                })
+                .catch(error => console.error("خطأ في تحميل بيانات المستخدم:", error));
+        }
+    
+        // التحكم في تفعيل وتجميد تحرير الحقول
+        function toggleEdit(isEditable) {
+            ["university_id", "college", "major", "email", "phone"].forEach(id => {
+                document.getElementById(id).readOnly = !isEditable;
+            });
+            document.getElementById("editButton").style.display = isEditable ? 'none' : 'block';
+            document.getElementById("saveButton").style.display = isEditable ? 'block' : 'none';
+        }
+    
+        // حفظ بيانات المستخدم المعدلة وإرسالها إلى الخادم
+        function saveUserData() {
+            const userData = {
+                university_id: document.getElementById("university_id").value,
+                college: document.getElementById("college").value,
+                major: document.getElementById("major").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+            };
+    
+            fetch('saveUserData.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); // عرض رسالة النجاح أو الخطأ
+                toggleEdit(false); // جعل الحقول غير قابلة للتعديل بعد الحفظ
+            })
+            .catch(error => console.error("خطأ في حفظ بيانات المستخدم:", error));
+        }
+    
+        // إغلاق النافذة المنبثقة عند النقر خارجها
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('userModal')) {
+                document.getElementById('userModal').style.display = 'none';
+            }
+        };
+    
+        // إغلاق النافذة المنبثقة باستخدام زر الإغلاق
+        function closeModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+    
+        // تسجيل الخروج ومسح بيانات الجلسة
+        function logout() {
+    // مسح التخزين المحلي والجلسة
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // استدعاء logout.php لتدمير الجلسة على الخادم
+    fetch('logout.php')
+        .then(response => response.text())
+        .then(responseText => {
+            console.log(responseText); // التحقق من رسالة النجاح في وحدة التحكم
+            // توجيه المستخدم إلى صفحة تسجيل الدخول
+            window.location.href = 'login.html';
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+    </script>
+    
+
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="document.getElementById('userModal').style.display='none'">&times;</span>
+        <h2>معلومات الحساب</h2>
+        <label>الرقم الجامعي:</label><input type="text" id="university_id" readonly><br>
+        <label>الكلية:</label><input type="text" id="college" readonly><br>
+        <label>التخصص:</label><input type="text" id="major" readonly><br>
+        <label>البريد الإلكتروني:</label><input type="text" id="email" readonly><br>
+        <label>رقم الهاتف:</label><input type="text" id="phone" readonly><br>
+        <button id="editButton" class="button" onclick="toggleEdit(true)">تعديل</button>
+        <button id="saveButton" class="button" style="display:none" onclick="saveUserData()">حفظ</button>
+    </div>
+</div>
+
+ <!-- تذييل الصفحة -->
+ <div class="footer">Created By: Nemer Adel | 20222844 © 2024</div>
+
+</body>
+</html>

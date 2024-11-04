@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function register() {
+            var university_id = document.getElementById("university_id").value;
+            var password = document.getElementById("password").value;
+            var college = document.getElementById("college").value;
+            var major = document.getElementById("major").value;
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "register.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById("response").innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send("university_id=" + university_id + "&password=" + password + "&college=" + college + "&major=" + major + "&email=" + email + "&phone=" + phone);
+            return false; // منع إعادة تحميل الصفحة
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>إنشاء حساب جديد</h2>
+        <form onsubmit="return register();">
+            <input type="text" id="university_id" name="university_id" placeholder="الرقم الجامعي" pattern="\d{5,20}" required>
+            <input type="password" id="password" name="password" placeholder="كلمة المرور" required>
+            <input type="text" id="college" name="college" placeholder="الكلية" required>
+            <input type="text" id="major" name="major" placeholder="التخصص" required>
+            <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
+            <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required>
+            <button type="submit">إنشاء حساب</button>
+        </form>
+        <div id="response"></div>
+        <p>لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a></p>
+    </div>
+</body>
+</html>
